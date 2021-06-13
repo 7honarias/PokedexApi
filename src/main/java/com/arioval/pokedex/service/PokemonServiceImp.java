@@ -1,18 +1,18 @@
 package com.arioval.pokedex.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.arioval.pokedex.common.Common;
 import com.arioval.pokedex.models.PokemonModel;
+import com.arioval.pokedex.models.ResponseModel;
 
 import reactor.core.publisher.Mono;
 
@@ -26,6 +26,7 @@ public class PokemonServiceImp implements PokemonService{
 	public PokemonServiceImp() {
 		
 	}
+
 	public JSONObject makeRequest(String url) {		
 		Mono<String> responseFromApi = webClient.get()
 				.uri(url)
@@ -34,8 +35,6 @@ public class PokemonServiceImp implements PokemonService{
 		JSONObject jsonObject = new JSONObject(responseFromApi.block());
 		return jsonObject;
 	}
-
-	
 
 	@Override
 	public PokemonModel getPokemonByName(String name) {
@@ -55,19 +54,24 @@ public class PokemonServiceImp implements PokemonService{
 		pokemon.setType(types);
 		return pokemon;
 	}
+
 	@Override
-	public Map<String, PokemonModel> getPokedex(int page) {
-		String url = "https://pokeapi.co/api/v2/evolution-chain/";
-		Map<String, PokemonModel> listPokemon = new HashMap<>();
+	public ResponseEntity<Object> getPokedex(int page) {
+		String url = Common.URL + "evolution-chain/";
+		ResponseModel response = new ResponseModel();
+		response.setNext(Common.getNextUrl(page));
+		response.setPrevious(Common.getPreviousUrl(page));
 		int index = page * 10 + 1;
+		List<PokemonModel> pokemons = new ArrayList<>();
 
 		for(int i = index; i < index + 10; i++) {
 			JSONObject jsonObject = this.makeRequest(url+i);
 			String name = jsonObject.getJSONObject("chain").getJSONObject("species").getString("name");
 			PokemonModel pokemon = this.getPokemonByName(name);
-			listPokemon.put(name, pokemon);
+			pokemons.add(pokemon);
 		}
-		return listPokemon;
+		response.setResults(pokemons);
+		return new ResponseEntity<Object>(response, HttpStatus.CREATED);
 	}
 	
 	@Override

@@ -81,5 +81,21 @@ public class Common {
 		return evolutions;
 	}
 
-	
+	public static String getNextUrl(int page) {
+		page += 1;
+		if(page >= 10) {
+			return null;
+		}
+		return "http:localhost:8080/api/pokemons/" + page;
+	}
+
+	public static String getPreviousUrl(int page) {
+		if(page == 0) {
+			return null;
+		}
+		page -= 1;
+		
+		return "http:localhost:8080/api/pokemons/" + page;
+	}
+
 }
