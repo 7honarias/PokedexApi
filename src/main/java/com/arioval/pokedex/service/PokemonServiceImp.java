@@ -16,6 +16,12 @@ import com.arioval.pokedex.models.ResponseModel;
 
 import reactor.core.publisher.Mono;
 
+/**
+ * Service implementation to show list of pokemons and pokemon details.
+ *
+ * @author jhon.arias
+ *
+ */
 
 @Service
 public class PokemonServiceImp implements PokemonService{
@@ -35,7 +41,15 @@ public class PokemonServiceImp implements PokemonService{
 		JSONObject jsonObject = new JSONObject(responseFromApi.block());
 		return jsonObject;
 	}
-
+	
+	 /**
+     * This method get from the pokeApi the pokemon data without evolutions .
+     * .
+     * @param name can be a pokemon name or pokemon id
+     * 
+     * @return Pokemon object with all data.
+     *                               
+     */
 	@Override
 	public PokemonModel getPokemonByName(String name) {
 		PokemonModel pokemon = new PokemonModel();
@@ -55,6 +69,14 @@ public class PokemonServiceImp implements PokemonService{
 		return pokemon;
 	}
 
+	/**
+     * This method get from the pokeApi list of pokemons.
+     * .
+     * @param page number of current page
+     * 
+     * @return Pokemon object with all data.
+     *                               
+     */
 	@Override
 	public ResponseEntity<Object> getPokedex(int page) {
 		String url = Common.URL + "evolution-chain/";
@@ -71,9 +93,17 @@ public class PokemonServiceImp implements PokemonService{
 			pokemons.add(pokemon);
 		}
 		response.setResults(pokemons);
-		return new ResponseEntity<Object>(response, HttpStatus.CREATED);
+		return new ResponseEntity<Object>(response, HttpStatus.OK);
 	}
 	
+	/**
+     * This method get data of evolutions of a pokemon.
+     * 
+     * @param id can be a pokemon name or pokemon id
+     * 
+     * @return Pokemon object with all data and evolutions.
+     *                               
+     */
 	@Override
 	public PokemonModel getPokemonAdv(String id) {
 		String url = Common.URL + "pokemon-species/";

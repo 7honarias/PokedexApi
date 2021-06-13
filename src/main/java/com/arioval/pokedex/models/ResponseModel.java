@@ -2,6 +2,14 @@ package com.arioval.pokedex.models;
 
 import java.util.List;
 
+/**
+ * model represents an item, which is composed of the pokemon list, next,
+ *                              previous link.
+ *
+ * @author jhon.arias
+ *
+ */
+
 public class ResponseModel {
 	String next;
 	String previous;

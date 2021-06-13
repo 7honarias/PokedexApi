@@ -86,7 +86,7 @@ public class Common {
 		if(page >= 10) {
 			return null;
 		}
-		return "http:localhost:8080/api/pokemons/" + page;
+		return "https://poke-api-123.herokuapp.com/api/pokemons/" + page;
 	}
 
 	public static String getPreviousUrl(int page) {
@@ -95,7 +95,7 @@ public class Common {
 		}
 		page -= 1;
 		
-		return "http:localhost:8080/api/pokemons/" + page;
+		return "https://poke-api-123.herokuapp.com/api/pokemons/" + page;
 	}
 
 }

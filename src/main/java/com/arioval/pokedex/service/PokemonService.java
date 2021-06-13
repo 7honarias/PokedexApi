@@ -4,6 +4,12 @@ import org.springframework.http.ResponseEntity;
 
 import com.arioval.pokedex.models.PokemonModel;
 
+/**
+ * Interface that exposes the methods for the items.
+ *
+ * @author jhon.arias
+ *
+ */
 
 public interface PokemonService {
 	

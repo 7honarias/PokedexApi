@@ -2,6 +2,14 @@ package com.arioval.pokedex.models;
 
 import java.util.List;
 
+/**
+ * model represents an item, which is composed of the pokemon id, weight,
+ *                              image, name, type, abilities, evolutions.
+ *
+ * @author jhon.arias
+ *
+ */
+
 public class PokemonModel {
 	
 	private int id;
