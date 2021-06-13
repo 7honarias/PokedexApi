@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONArray;
+
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,27 +34,8 @@ public class PokemonServiceImp implements PokemonService{
 		JSONObject jsonObject = new JSONObject(responseFromApi.block());
 		return jsonObject;
 	}
-	
-	@Override
-	public Map<String, PokemonModel> getPokemons(int page) {
-		String url = Common.makeUrl(page);
-		JSONObject jsonObject = this.makeRequest(url);
-		Map<String, PokemonModel> listPokemon = this.getListPokemon(jsonObject);
-		System.out.println(jsonObject);
-		return listPokemon;
-	}
 
-	private Map<String, PokemonModel> getListPokemon(JSONObject jsonObject) {
-		Map<String, PokemonModel> pokemons = new HashMap<>();
-		JSONArray ArrayPokemon = jsonObject.getJSONArray("results");
-		for(int x = 0; x < ArrayPokemon.length(); x++) {
-			JSONObject obj = ArrayPokemon.getJSONObject(x);
-			String name = obj.getString("name");
-			PokemonModel poke = this.getPokemonByName(name);
-			pokemons.put(name, poke);
-		}
-		return pokemons;
-	}
+	
 
 	@Override
 	public PokemonModel getPokemonByName(String name) {
@@ -79,20 +60,34 @@ public class PokemonServiceImp implements PokemonService{
 		String url = "https://pokeapi.co/api/v2/evolution-chain/";
 		Map<String, PokemonModel> listPokemon = new HashMap<>();
 		int index = page * 10 + 1;
+
 		for(int i = index; i < index + 10; i++) {
 			JSONObject jsonObject = this.makeRequest(url+i);
 			String name = jsonObject.getJSONObject("chain").getJSONObject("species").getString("name");
-			List<String> evolutions = Common.getEvolutions(jsonObject);
 			PokemonModel pokemon = this.getPokemonByName(name);
-			List<PokemonModel> evolList = new ArrayList<>();
-			for(int x = 0; x < evolutions.size(); x++) {
-				PokemonModel pokemonEvo = this.getPokemonByName(name);
-				evolList.add(pokemonEvo);
-			}
-			pokemon.setEvolutions(evolList);
 			listPokemon.put(name, pokemon);
 		}
 		return listPokemon;
+	}
+	
+	@Override
+	public PokemonModel getPokemonAdv(String id) {
+		String url = Common.URL + "pokemon-species/";
+		PokemonModel pokemon = this.getPokemonByName(id);
+		JSONObject jsonSpecies = this.makeRequest(url+id);
+		String urlEvolutions = jsonSpecies.getJSONObject("evolution_chain").getString("url");
+		JSONObject jsonObject = this.makeRequest(urlEvolutions);
+		List<String> evolutions = Common.getEvolutions(jsonObject);
+		List<PokemonModel> evolList = new ArrayList<>();
+		
+		for(int x = 0; x < evolutions.size(); x++) {
+			String name = evolutions.get(x);
+			PokemonModel pokemonEvo = this.getPokemonByName(name);
+			evolList.add(pokemonEvo);
+		}
+		pokemon.setEvolutions(evolList);
+		
+		return pokemon;
 	}
 
 }

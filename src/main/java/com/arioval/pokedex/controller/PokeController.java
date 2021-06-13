@@ -24,8 +24,8 @@ public class PokeController {
 		return pokemonService.getPokedex(page);
 	}
 	@GetMapping("/pokemon/{id}")
-	public PokemonModel getPokemonByName(@PathVariable String id) {
-		return pokemonService.getPokemonByName(id);
+	public PokemonModel getPokemonAdv(@PathVariable String id) {
+		return pokemonService.getPokemonAdv(id);
 	}
 	
 

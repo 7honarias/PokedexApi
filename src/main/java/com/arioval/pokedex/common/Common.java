@@ -63,9 +63,10 @@ public class Common {
 			String first = evol.getJSONObject(x).getJSONObject("species").getString("name");
 			String second = null;
 			JSONArray secondEvol = evol.getJSONObject(x).getJSONArray("evolves_to");
+
 			for(int i = 0; i < secondEvol.length(); i++) {
 				if(i == 0) {
-					second = evol.getJSONObject(i).getJSONObject("species").getString("name");
+					second = secondEvol.getJSONObject(i).getJSONObject("species").getString("name");
 				}
 			}
 			if(first != null) {
